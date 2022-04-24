@@ -10,12 +10,15 @@ import (
 )
 
 const (
-	commitCount = 700
+	commitCount = 50
 
 	printCountLimit = 255
 
 	messageLengthMin = 6
 	messageLengthMax = 20
+
+	commitIntervalMin = 12 * 60 * 60
+	commitIntervalMax = 24 * 60 * 60
 
 	sourcePrefix = "src"
 	outputDir    = "output"
@@ -23,12 +26,11 @@ const (
 
 func main() {
 	timeNow := time.Now()
+	rand.Seed(time.Now().UnixNano())
 
 	codeCache := make(map[string]string)
 
-	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
-		os.Mkdir(outputDir, 0755)
-	}
+	mkdir()
 
 	scriptOut, err := os.OpenFile(outputDir+"/commit.sh", os.O_CREATE|os.O_WRONLY, 0755)
 	if err != nil {
@@ -37,13 +39,15 @@ func main() {
 	}
 	defer scriptOut.Close()
 
+	scriptCommands := make([]string, 0)
+
 	// Generate 700 commits
 	for i := 0; i < commitCount; i++ {
 		// What is my language today?
 		language, path := getLanguage()
 
 		// Time travel back 12 ~ 24 hours
-		timeNow = timeNow.Add(-time.Duration(rand.Intn(12*60*60)+12*60*60) * time.Second)
+		timeNow = timeNow.Add(-time.Duration(rand.Intn(commitIntervalMax-commitIntervalMin)+commitIntervalMin) * time.Second)
 
 		// Generate a random message
 		message := randomString(rand.Intn(messageLengthMax-messageLengthMin) + messageLengthMin)
@@ -74,22 +78,35 @@ func main() {
 		languageSuffix := path[strings.LastIndex(path, ".")+1:]
 
 		// Write code to disk
-		err = ioutil.WriteFile(fmt.Sprintf("%s/%s.%s", outputDir, message, languageSuffix), []byte(fullCode), 0644)
+		err = ioutil.WriteFile(fmt.Sprintf("%s/%s/%s.%s", outputDir, language, message, languageSuffix), []byte(fullCode), 0644)
 		if err != nil {
 			fmt.Printf("Failed to write %s/%s.%s\n", outputDir, message, languageSuffix)
 			panic(err)
 		}
 
-		// Write commit to script
-		scriptOut.WriteString(fmt.Sprintf("git add %s.%s\n", message, languageSuffix))
-		scriptOut.WriteString(fmt.Sprintf("git commit -m \"%s\" --date %d\n", commitMessage, timeNow.Unix()))
-		scriptOut.WriteString("\n")
+		// store commit command
+		var command string
+		command += fmt.Sprintf("git add %s.%s\n", message, languageSuffix)
+		command += fmt.Sprintf("git commit -m \"%s\" --date %d\n\n", commitMessage, timeNow.Unix())
+		scriptCommands = append(scriptCommands, command)
 	}
 
+	// Write script to disk
+	for i := len(scriptCommands) - 1; i >= 0; i-- {
+		_, err = scriptOut.WriteString(scriptCommands[i])
+		if err != nil {
+			fmt.Printf("Failed to write script\n")
+			panic(err)
+		}
+	}
+	if err != nil {
+		fmt.Printf("Failed to write script file: %s\n", err)
+		panic(err)
+	}
+	fmt.Printf("Wrote %d commits to script file\n", len(scriptCommands))
 }
 
 func randomString(length int) string {
-	rand.Seed(time.Now().UnixNano())
 	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	result := make([]byte, length)
 	for i := 0; i < length; i++ {
@@ -98,11 +115,44 @@ func randomString(length int) string {
 	return string(result)
 }
 
+func mkdir() {
+	var languages = []string{
+		"c",
+		"cpp",
+		"csharp",
+		"go",
+		"java",
+		"javascript",
+		"python",
+		"ruby",
+		"swift",
+		"typescript",
+		"php",
+		"kotlin",
+		"scala",
+		"haskell",
+		"rust",
+		"lisp",
+		"lua",
+		"bash",
+	}
+
+	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+		os.Mkdir(outputDir, 0755)
+	}
+
+	for _, language := range languages {
+		if _, err := os.Stat(fmt.Sprintf("%s/%s", outputDir, language)); os.IsNotExist(err) {
+			os.Mkdir(fmt.Sprintf("%s/%s", outputDir, language), 0755)
+		}
+	}
+}
+
 func getLanguage() (lang, path string) {
 	var languages = []string{
 		"c",
-		"c++",
-		"c#",
+		"cpp",
+		"csharp",
 		"go",
 		"java",
 		"javascript",
