@@ -80,13 +80,13 @@ func main() {
 		// Write code to disk
 		err = ioutil.WriteFile(fmt.Sprintf("%s/%s/%s.%s", outputDir, language, message, languageSuffix), []byte(fullCode), 0644)
 		if err != nil {
-			fmt.Printf("Failed to write %s/%s.%s\n", outputDir, message, languageSuffix)
+			fmt.Printf("Failed to write %s/%s/%s.%s\n", outputDir, language, message, languageSuffix)
 			panic(err)
 		}
 
 		// store commit command
 		var command string
-		command += fmt.Sprintf("git add %s.%s\n", message, languageSuffix)
+		command += fmt.Sprintf("git add %s/%s.%s\n", language, message, languageSuffix)
 		command += fmt.Sprintf("git commit -m \"%s\" --date %d\n\n", commitMessage, timeNow.Unix())
 		scriptCommands = append(scriptCommands, command)
 	}
