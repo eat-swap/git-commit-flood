@@ -116,27 +116,7 @@ func randomString(length int) string {
 }
 
 func mkdir() {
-	var languages = []string{
-		"c",
-		"cpp",
-		"csharp",
-		"go",
-		"java",
-		"javascript",
-		"python",
-		"ruby",
-		"swift",
-		"typescript",
-		"php",
-		"kotlin",
-		"scala",
-		"haskell",
-		"rust",
-		"lisp",
-		"lua",
-		"bash",
-	}
-
+	var languages = getLanguageList()
 	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
 		os.Mkdir(outputDir, 0755)
 	}
@@ -149,46 +129,16 @@ func mkdir() {
 }
 
 func getLanguage() (lang, path string) {
-	var languages = []string{
-		"c",
-		"cpp",
-		"csharp",
-		"go",
-		"java",
-		"javascript",
-		"python",
-		"ruby",
-		"swift",
-		"typescript",
-		"php",
-		"kotlin",
-		"scala",
-		"haskell",
-		"rust",
-		"lisp",
-		"lua",
-		"bash",
-	}
-	var languageSuffix = []string{
-		".c",
-		".cpp",
-		".cs",
-		".go",
-		".java",
-		".js",
-		".py",
-		".rb",
-		".swift",
-		".ts",
-		".php",
-		".kt",
-		".scala",
-		".hs",
-		".rs",
-		".lisp",
-		".lua",
-		".sh",
-	}
+	var languages = getLanguageList()
+	var languageSuffix = getSuffixList()
 	idx := rand.Intn(len(languages))
 	return languages[idx], fmt.Sprintf("simple%s", languageSuffix[idx])
+}
+
+func getLanguageList() []string {
+	return []string{"c", "cpp", "csharp", "go", "java", "javascript", "python", "ruby", "swift", "typescript", "php", "kotlin", "scala", "haskell", "rust", "lisp", "lua", "bash"}
+}
+
+func getSuffixList() []string {
+	return []string{".c", ".cpp", ".cs", ".go", ".java", ".js", ".py", ".rb", ".swift", ".ts", ".php", ".kt", ".scala", ".hs", ".rs", ".lisp", ".lua", ".sh"}
 }
