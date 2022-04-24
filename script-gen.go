@@ -87,7 +87,9 @@ func main() {
 		// store commit command
 		var command string
 		command += fmt.Sprintf("git add %s/%s.%s\n", language, message, languageSuffix)
-		command += fmt.Sprintf("git commit -m \"%s\" --date %d\n\n", commitMessage, timeNow.Unix())
+		command += fmt.Sprintf("export GIT_AUTHOR_DATE=\"%s\"\n", timeNow.Format(time.RFC3339))
+		command += fmt.Sprintf("export GIT_COMMITTER_DATE=\"%s\"\n", timeNow.Format(time.RFC3339))
+		command += fmt.Sprintf("git commit -m \"%s\"\n\n", commitMessage)
 		scriptCommands = append(scriptCommands, command)
 	}
 
