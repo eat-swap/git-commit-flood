@@ -69,7 +69,7 @@ func main() {
 			fullCode = fmt.Sprintf(string(fb), repeatCount, message)
 		}
 
-		if language == "java" || language == "scala" {
+		if language == "java" || language == "scala" || language == "csharp" {
 			fullCode = strings.Replace(fullCode, "CLASS_NAME", message, 1)
 		}
 
