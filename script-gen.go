@@ -108,8 +108,10 @@ func main() {
 
 func randomString(length int) string {
 	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	result := make([]byte, length)
-	for i := 0; i < length; i++ {
+	result[0] = upperChars[rand.Intn(len(upperChars))]
+	for i := 1; i < length; i++ {
 		result[i] = chars[rand.Intn(len(chars))]
 	}
 	return string(result)
