@@ -1,6 +1,4 @@
-/**
- * this file cannot be executed directly.
- */
+// this file cannot be executed directly
 
 fun main() {
     var x = %d - 1;

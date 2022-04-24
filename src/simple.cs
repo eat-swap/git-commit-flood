@@ -1,4 +1,4 @@
-// This file cannot be executed directly.
+// this file cannot be executed directly
 
 public class CLASS_NAME {
 	public static void Main() {
