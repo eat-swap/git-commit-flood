@@ -69,7 +69,7 @@ func main() {
 			fullCode = fmt.Sprintf(string(fb), repeatCount, message)
 		}
 
-		if language == "java" || language == "scala" || language == "csharp" {
+		if language == "java" || language == "scala" || language == "csharp" || language == "pascal" {
 			fullCode = strings.Replace(fullCode, "CLASS_NAME", message, 1)
 		}
 
@@ -140,9 +140,9 @@ func getLanguage() (lang, path string) {
 }
 
 func getLanguageList() []string {
-	return []string{"c", "cpp", "csharp", "go", "java", "javascript", "python", "ruby", "swift", "typescript", "php", "kotlin", "scala", "haskell", "rust", "lisp", "lua", "bash"}
+	return []string{"c", "cpp", "csharp", "go", "java", "javascript", "python", "ruby", "swift", "typescript", "php", "kotlin", "scala", "haskell", "rust", "lisp", "lua", "bash", "pascal"}
 }
 
 func getSuffixList() []string {
-	return []string{".c", ".cpp", ".cs", ".go", ".java", ".js", ".py", ".rb", ".swift", ".ts", ".php", ".kt", ".scala", ".hs", ".rs", ".lisp", ".lua", ".sh"}
+	return []string{".c", ".cpp", ".cs", ".go", ".java", ".js", ".py", ".rb", ".swift", ".ts", ".php", ".kt", ".scala", ".hs", ".rs", ".lisp", ".lua", ".sh", ".pas"}
 }

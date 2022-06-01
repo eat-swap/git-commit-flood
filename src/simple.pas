@@ -1,4 +1,4 @@
-program %s;
+program CLASS_NAME;
 
 var i, n: longint;
 
