@@ -20,6 +20,12 @@ Execute the binary, it will generate the file needed to fill your git
 repository, and a script named `commit.sh` that will automatically commit
 the changes for you.
 
+Please move the generated `output` directory elsewhere before executing
+`commit.sh`.
+
 ## Note
+
+**This simple program violated the *Open Close Principle*. Planned to have it 
+refactored in near future.** (2022-06-02)
 
 Still WIP, may not work as expected (but I will try my best to make it work).
